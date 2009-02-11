@@ -1,0 +1,16 @@
+development:
+  interval: 5
+  verbose: false
+  ports: /dev/cu.usbmodem1a21
+  remote: 'http://localhost:3000'
+  log: log/development.log
+  err: log/development.err
+  pid: tmp/pids/lokii.pid
+  
+test:
+  interval: 1
+  verbose: false
+  remote: 'http://localhost:3000'
+  log: log/test.log
+  err: log/test.err
+  pid: tmp/pids/lokii_test.pid

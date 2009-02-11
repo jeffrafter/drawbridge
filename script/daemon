@@ -1,0 +1,33 @@
+#!/usr/bin/env ruby
+require 'daemons'
+
+LOKII_DAEMON = true
+
+require File.join(File.dirname(__FILE__), '..', 'config', 'boot')
+
+if ARGV.empty?
+  "Usage: lokii [connect|disconnect|start|stop|restart]"
+  exit
+end
+
+if ARGV[0] == 'connect'
+  Lokii::Processor.servers.each{|server| server.connect }  
+  exit(0)
+end
+
+if ARGV[0] == 'disconnect'
+  Lokii::Processor.servers.each{|server| server.disconnect }  
+  exit(0)
+end
+
+options = {
+  :multiple => false,
+  :dir_mode => :normal,
+  :dir => File.join(LOKII_ROOT, 'tmp', 'pids'),
+  :backtrace => true,
+  :log_output => true,
+  :app_name => 'lokii'
+}
+#:monitor => true
+
+Daemons.run(File.join(LOKII_ROOT, 'config', 'process.rb'), options)
