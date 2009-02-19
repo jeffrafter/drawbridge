@@ -1,17 +1,19 @@
+require 'time'
+
 class RemoteServer < Lokii::Server  
   attr_accessor :since
   
   def initialize
-    # Need to actually store this...
-    @since = 1.hour.ago
+    # TODO need to actually store this... for now we won't repeat anything, but
+    # TODO we also won't pick up waiting messages
+    @since = Time.now.utc
   end
   
   def check
-    responses = Message.all(:since => self.since)
-    responses.each do |response|
-      say response.message, response.number
-      sent = response.updated_at || response.created_at
-      self.since = sent if sent > self.since
+    messages = Outbox.all(:since => self.since.iso8601)
+    messages.each do |message|
+      say message.text, message.number
+      self.since = message.updated_at.utc if message.updated_at.utc > self.since
     end
   rescue Exception => e
     Lokii::Logger.debug 'Error connecting to remote server: ' + e.message  

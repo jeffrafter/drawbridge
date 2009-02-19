@@ -1,15 +1,11 @@
 require 'rubygems'
 require 'resource_party'
-require 'active_record'
 require 'lokii'
 
 # Only option currently is :database
 Lokii::Config.setup do |config|
-  config.options[:database] = true
+  config.options[:database] = false
 end
-
-# Temp, should be moved into the config
-ActiveRecord::Base.logger = Lokii::Logger
 
 # Lokii won't do anything unless a server is activated. By default it comes with
 # two servers: database_server and file_server. These are simple servers that
@@ -19,7 +15,9 @@ ActiveRecord::Base.logger = Lokii::Logger
 require 'lokii/servers/gsm_server'
 
 # Register the server with the processor
-Lokii::Processor.servers = Lokii::GsmServer.new, RemoteServer.new unless Lokii::Config.environment == :test
+unless Lokii::Config.environment == :test
+  Lokii::Processor.servers = Lokii::GsmServer.new, RemoteServer.new 
+end  
 
 # Once you have selected a server you need to register the appropriate handlers
 # By example a PingHandler and ILoveYouHandler are registered. Handlers are
@@ -28,4 +26,5 @@ Lokii::Processor.servers = Lokii::GsmServer.new, RemoteServer.new unless Lokii::
 # assign handlers to the processor, it will register the handlers with all
 # available servers. If you want more fine-grained control, register the 
 # handlers on the server instance itself.
-Lokii::Processor.handlers = PingHandler.new, AuthHandler.new, ILoveYouHandler.new, CommandHandler.new 
+Lokii::Processor.handlers = 
+  PingHandler.new, ILoveYouHandler.new, RemoteHandler.new 

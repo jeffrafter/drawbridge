@@ -1,7 +1,7 @@
 == Knight Foundation RSS And News on Cell Phones (RANC) by DataDyne
 
-Gateway and message handler for management of incoming and outgoing 
-messages to proxy to the server. This will also act as the cache for user 
+Gateway and outbox handler for management of incoming and outgoing 
+outboxs to proxy to the server. This will also act as the cache for user 
 sessions.
 
 There are more than 3 Billion mobile phone subscribers in the world (2008) and
@@ -33,11 +33,39 @@ For testing you will need:
 
   thoughtbot-factory_girl
   thoughtbot-shoulda
+  chrisk-fakeweb
   mocha
-  fakeweb
-  
-For data you will need
 
-  active_record
-  active_support
+
+== Remote server assumptions
+
+(1) Accepts an api_key parameter for all requests
+
+(2) accepts POST commands to /inbox.xml to create new entries in an inbox (or
+handle the requests approriately, including authentication). The parameters 
+in the body should include:
+
+  outbox[text] # The actual incoming content
+  outbox[number] # The sender
+  outbox[sent_at] # When the sender sent the outbox
+  outbox[processed_at] # When the gateway received the outbox
+  outbox[receiver] # The actual number that received the outbox
   
+(3) accepts GET requests to /outbox.xml to retrieve waiting outboxs from an
+outbox. The response should be an XML container in the following format:
+
+  <?xml version="1.0" encoding="UTF-8"?>
+  <outboxes type="array">
+    <outbox>
+      <id type="integer">14</id>
+      <outbox>Invite your friends by sending 'invite +19995551212'</outbox>
+      <number>+17775551212</number>
+      <created-at type="datetime">2009-02-11T19:58:26Z</created-at>
+      <updated-at type="datetime">2009-02-11T19:58:26Z</updated-at>
+    </outbox>
+  </outboxs>
+
+Where the internal order of elements is not significant. (This kind of XML can
+be produced easily with Outbox.all.to_xml using active record). The server 
+should accept a since parameter and only return messages that have been updated
+since the specified date (if specified)

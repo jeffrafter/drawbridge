@@ -3,6 +3,7 @@ development:
   verbose: false
   ports: /dev/cu.usbmodem1a21
   remote: 'http://localhost:3000'
+  api_key: 7c28db9f8a0e10ab5101d5c53ef44035890c77c8b53ea2587c4d4aa85728ae49475bf09065624dae9d3442eb211bd87915cdd494cf3774127cc5dcea6339f4dd
   log: log/development.log
   err: log/development.err
   pid: tmp/pids/lokii.pid
@@ -11,6 +12,7 @@ test:
   interval: 1
   verbose: false
   remote: 'http://localhost:3000'
+  api_key: 7c28db9f8a0e10ab5101d5c53ef44035890c77c8b53ea2587c4d4aa85728ae49475bf09065624dae9d3442eb211bd87915cdd494cf3774127cc5dcea6339f4dd
   log: log/test.log
   err: log/test.err
   pid: tmp/pids/lokii_test.pid
