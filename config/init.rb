@@ -12,11 +12,10 @@ end
 # implement the checking, processing and saying, either through a database 
 # (which can be used in conjunction with gnokii/smsd and others) or through 
 # a watched directory.
-require 'lokii/servers/gsm_server'
 
 # Register the server with the processor
 unless Lokii::Config.environment == :test
-  Lokii::Processor.servers = Lokii::GnokiiWindowsCommandLineServer.new, RemoteServer.new 
+  Lokii::Processor.servers = Lokii::Win32SmsServer.new, RemoteServer.new 
 end  
 
 # Once you have selected a server you need to register the appropriate handlers

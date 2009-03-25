@@ -50,7 +50,7 @@ module Lokii
     end
   
     def getsms
-      `#{gnokii} --config #{config} --getsms #{@mailbox || 'MT'} 1 -d -F #{incoming}`
+      `#{gnokii} --config '#{config}' --getsms #{@mailbox || 'MT'} 1 -F '#{incoming}'`
       raise ReadError unless $?.exitstatus == 0
     end
     
