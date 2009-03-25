@@ -16,7 +16,7 @@ require 'lokii/servers/gsm_server'
 
 # Register the server with the processor
 unless Lokii::Config.environment == :test
-  Lokii::Processor.servers = Lokii::GsmServer.new, RemoteServer.new 
+  Lokii::Processor.servers = Lokii::GnokiiWindowsCommandLineServer.new, RemoteServer.new 
 end  
 
 # Once you have selected a server you need to register the appropriate handlers

@@ -1,0 +1,18 @@
+# See http://wiki.gnokii.org/index.php/Config for working examples.
+
+[global]
+port = com5:
+model = AT
+initlength = default
+connection = serial
+use_locking = no
+serial_baudrate = 19200
+smsc_timeout = 10
+
+[xgnokii]
+allow_breakage = 0
+
+[logging]
+debug = on
+rlpdebug = off
+xdebug = off
