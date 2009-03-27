@@ -14,6 +14,7 @@ module Lokii
       ports.each {|port| modems << Win32::Sms.new(port) }
       modems = [Win32::Sms.new] if modems.empty?
       modems.each {|modem| modem.encoding = Lokii::Config.encoding.to_sym} if Lokii::Config.encoding
+      modems.each {|modem| modem.ignore_unknown_errors = true} if Lokii::Config.ignore_unknown_errors == 'y'
       @proxies = modems.map{|modem| Lokii::Win32SmsProxy.new(modem) }
       @current = 0
     end      
