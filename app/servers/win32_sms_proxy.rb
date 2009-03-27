@@ -17,6 +17,7 @@ module Lokii
     
     def messages
       @modem.process
+      @modem.messages || []
     end
   end  
 end
