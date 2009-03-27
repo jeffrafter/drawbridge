@@ -29,7 +29,7 @@ module Lokii
     def say(text, number, reply = nil)
       @current += 1
       @current = 0 if @current > proxies.size - 1 
-      @proxies[@current].outgoing(number, text)
+      @proxies[@current].sms(number, text)
     end
   end  
 end
