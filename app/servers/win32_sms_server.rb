@@ -21,6 +21,11 @@ module Lokii
     def check
       self.proxies.each {|proxy|
         proxy.messages.each {|message|
+          message = {:phone => 0,
+                     :number => message[:from],
+                     :text => message[:text],
+                     :created_at => message[:created_at],
+                     :processed_at => message[:processed_at]}
           handle(message)    
         }      
       }  
