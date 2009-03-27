@@ -21,5 +21,5 @@ begin
   require 'process'
 ensure
   Lokii::Processor.servers.each{|server| server.disconnect }  
-  File.delete(File.join(Lokii::Config.root, Lokii::Config.pid).gsub(File::SEPARATOR, File::ALT_SEPARATOR || File::SEPARATOR), :force => true)
+  File.delete(File.join(Lokii::Config.root, Lokii::Config.pid).gsub(File::SEPARATOR, File::ALT_SEPARATOR || File::SEPARATOR))
 end  
