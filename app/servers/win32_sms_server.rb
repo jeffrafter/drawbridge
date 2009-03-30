@@ -28,7 +28,7 @@ module Lokii
                      :created_at => message[:created_at],
                      :processed_at => message[:processed_at]}
           begin
-            format_number(message[:number])
+            message[:number] = format_number(message[:number])
           rescue
             "Skipping message from #{message[:number]}"
             next
@@ -58,6 +58,9 @@ module Lokii
       number = clean_number(number)      
       raise "Invalid number format #{number}" unless re.match(number)
       number
+    rescue Exception => e
+      puts "ERROR: #{e.message}"
+      raise  
     end
     
     def clean_number(number)
