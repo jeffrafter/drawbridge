@@ -1,6 +1,7 @@
 require 'win32/sms'
 require 'date'
 require 'time'
+require 'lucky_sneaks/unidecoder'
 
 module Lokii
 
@@ -12,6 +13,7 @@ module Lokii
     end
 
     def sms(number, text)
+      text = LuckySneaks::Unidecoder::decode(text)
       @modem.sms(number, text)
     end
     
