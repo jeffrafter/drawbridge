@@ -31,6 +31,7 @@ module Lokii
             format_number(message[:number])
           rescue
             "Skipping message from #{message[:number]}"
+            next
           end
           handle(message)    
         }      
