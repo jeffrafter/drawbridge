@@ -27,6 +27,11 @@ module Lokii
                      :text => message[:text],
                      :created_at => message[:created_at],
                      :processed_at => message[:processed_at]}
+          begin
+            format_number(message[:number])
+          rescue
+            "Skipping message from #{message[:number]}"
+          end
           handle(message)    
         }      
       }  
@@ -46,6 +51,7 @@ module Lokii
     end
     
     def format_number(number)
+      raise "Invalid number format #{number}" if number == "500" || number == "+5690" || number == "911" || number == "1121611611" || number == "Movistar"
       re = /\+#{country_code}\d{9}/
       number = clean_number(number)      
       raise "Invalid number format #{number}" unless re.match(number)
