@@ -30,7 +30,7 @@ module Lokii
           begin
             message[:number] = format_number(message[:number])
           rescue
-            "Skipping message from #{message[:number]}"
+            Lokii::Logger.debug "Skipping message from #{message[:number]}"
             next
           end
           handle(message)    
@@ -44,7 +44,7 @@ module Lokii
       @current = 0 if @current > proxies.size - 1 
       @proxies[@current].sms(number, text)
     rescue
-      puts "Could not send message because the number is not valid"  
+      Lokii::Logger.debug "Could not send message because the number is not valid"  
     end
     
     def country_code
@@ -59,7 +59,7 @@ module Lokii
       raise "Invalid number format #{number}" unless re.match(number)
       number
     rescue Exception => e
-      puts "ERROR: #{e.message}"
+      Lokii::Logger.debug "ERROR: #{e.message}"
       raise  
     end
     
