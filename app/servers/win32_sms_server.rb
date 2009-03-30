@@ -33,9 +33,30 @@ module Lokii
     end
 
     def say(text, number, reply = nil)
+      number = format_number(number)
       @current += 1
       @current = 0 if @current > proxies.size - 1 
       @proxies[@current].sms(number, text)
+    rescue
+      puts "Could not send message because the number is not valid"  
     end
-  end  
+    
+    def country_code
+      56
+    end
+    
+    def format_number(number)
+      re = /\+#{country_code}\d{9}/
+      number = clean_number(number)      
+      raise InvalidPhoneNumberError.new("Invalid number format #{number}") unless re.match(number)
+      number
+    end
+    
+    def clean_number(number)
+      number = number.gsub(/[^0-9]/, '')
+      number = number.gsub(/^#{country_code}/, '')
+      number = number.gsub(/^0/, '')
+      "+#{country_code}#{number}"
+    end
+  end      
 end
