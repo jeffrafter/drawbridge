@@ -48,7 +48,7 @@ module Lokii
     def format_number(number)
       re = /\+#{country_code}\d{9}/
       number = clean_number(number)      
-      raise InvalidPhoneNumberError.new("Invalid number format #{number}") unless re.match(number)
+      raise "Invalid number format #{number}" unless re.match(number)
       number
     end
     
