@@ -1,12 +1,15 @@
 require 'time'
+require 'yaml'
 
 class RemoteServer < Lokii::Server  
-  attr_accessor :since
+  def since
+    @since ||= YAML.load_file(history) rescue Time.now
+    @since
+  end
   
-  def initialize
-    # TODO need to actually store this... for now we won't repeat anything, but
-    # TODO we also won't pick up waiting messages
-    @since = Time.now.utc
+  def since=(value)
+    @since = value
+    File.open(history, 'w') {|out| YAML.dump(@since, out) }
   end
   
   def check
@@ -32,5 +35,10 @@ class RemoteServer < Lokii::Server
   
   def handle(message)
     # We don't want to handle anything from the users in here!    
+  end
+
+private
+  def history
+    File.join(Lokii::Config.root, 'config', 'history.yml')  
   end
 end
