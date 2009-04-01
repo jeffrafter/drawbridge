@@ -8,7 +8,7 @@ namespace :logs do
     puts "Uploading"
     Log.create(:text => log)
     puts "Deleting existing log"
-    File.delete('"' + filename + '"')
+    File.delete(filename)
     puts "Done"
   end  
 end
