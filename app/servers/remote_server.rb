@@ -3,7 +3,8 @@ require 'yaml'
 
 class RemoteServer < Lokii::Server  
   def since
-    @since ||= YAML.load_file(history) rescue Time.now
+    @since ||= YAML.load_file(history) rescue nil
+    @since ||= Time.now
     @since
   end
   
