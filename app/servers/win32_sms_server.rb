@@ -1,3 +1,5 @@
+class InvalidPhoneNumberError < RuntimeError; end
+
 module Lokii
 
   # The sms server operates against connected sms modem(s). If the ports 
@@ -43,8 +45,18 @@ module Lokii
       @current += 1
       @current = 0 if @current > proxies.size - 1 
       @proxies[@current].sms(number, text)
-    rescue Exception => e
+    rescue InvalidPhoneNumberError => e
       Lokii::Logger.debug "Could not send message because the number is not valid #{e.message}"  
+    rescue Exception => e
+      Lokii::Logger.debug "Could not send message #{e.message}"  
+    end
+    
+    def balance?(text='')
+      @current += 1
+      @current = 0 if @current > proxies.size - 1 
+      @proxies[@current].sms("103", text)
+    rescue Exception => e
+      Lokii::Logger.debug "Could not send message #{e.message}"  
     end
     
     def country_code
@@ -59,10 +71,10 @@ module Lokii
         number == "+12024687227" || 
         number == "+12025774803" || 
         number == "+14104912355")
-      raise "Invalid number format '#{number}'" if number == "500" || number == "+5690" || number == "911" || number == "1121611611" || number == "Movistar"
+      raise InvalidPhoneNumberError.new("Invalid number format '#{number}'") if number == "500" || number == "+5690" || number == "911" || number == "1121611611" || number == "Movistar"
       re = /\+#{country_code}\d{9}/
       number = clean_number(number)      
-      raise "Invalid number format '#{number}'" unless re.match(number)
+      raise InvalidPhoneNumberError.new("Invalid number format '#{number}'") unless re.match(number)
       number
     rescue Exception => e
       Lokii::Logger.debug "ERROR: #{e.message}"
