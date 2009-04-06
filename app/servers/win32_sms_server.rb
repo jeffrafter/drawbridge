@@ -19,6 +19,7 @@ module Lokii
       modems.each {|modem| modem.ignore_unknown_errors = true} if Lokii::Config.ignore_unknown_errors == 'y'
       @proxies = modems.map{|modem| Lokii::Win32SmsProxy.new(modem) }
       @current = 0
+      sleep(1)
     end      
   
     def check
@@ -37,6 +38,7 @@ module Lokii
           end
           handle(message)    
         }      
+        sleep(1)
       }  
     end
 
@@ -45,6 +47,7 @@ module Lokii
       @current += 1
       @current = 0 if @current > proxies.size - 1 
       @proxies[@current].sms(number, text)
+      sleep(1)
     rescue InvalidPhoneNumberError => e
       Lokii::Logger.debug "Could not send message because the number is not valid #{e.message}"  
     rescue Exception => e
