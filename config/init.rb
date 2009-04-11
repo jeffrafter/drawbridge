@@ -1,5 +1,7 @@
 require 'rubygems'
 require 'resource_party'
+
+$:.unshift('/var/www/lokii/lib')
 require 'lokii'
 
 # Only option currently is :database
@@ -15,7 +17,7 @@ end
 
 # Register the server with the processor
 unless Lokii::Config.environment == :test
-  Lokii::Processor.servers = Lokii::Win32SmsServer.new, RemoteServer.new 
+  Lokii::Processor.servers = Lokii::LocalSmsServer.new, RemoteServer.new 
 end  
 
 # Once you have selected a server you need to register the appropriate handlers
