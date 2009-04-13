@@ -18,4 +18,14 @@ Dir[File.join(Lokii::Config.root, 'test', 'factories', '**', '*.rb')].each {|f|
 }
 
 class Test::Unit::TestCase
+
+  def should_raise(*args, &block)
+    opts = args.first.is_a?(Hash) ? args.fist : {}
+    opts[:kind_of] = args.first if args.first.is_a?(Class)
+    yield block
+    flunk opts[:message] || "should raise an exception, but none raised"
+  rescue Exception => e
+    assert e.kind_of?(opts[:kind_of]), opts[:message] || "should raise exception of type #{opts[:kind_of]}, but got #{e.class} instead" if opts[:kind_of]
+  end
+    
 end

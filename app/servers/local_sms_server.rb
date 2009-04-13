@@ -60,10 +60,11 @@ module Lokii
       number
     end
 
-    def validate_number(number)
+    def validate_number(number)    
       Lokii::Config.valid_numbers.each {|validator|
-        raise InvalidPhoneNumberError.new("Invalid number format '#{number}'") unless validator.match(number)
+        return number if validator.match(number)
       }  
+      raise InvalidPhoneNumberError.new("Invalid number format '#{number}'")
     end    
   end      
 end
