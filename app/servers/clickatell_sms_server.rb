@@ -1,7 +1,3 @@
-require 'net/http'
-require 'net/https'
-require 'clickatell_simple'
-require 'cgi'
 
 class InvalidPhoneNumberError < RuntimeError; end
 
