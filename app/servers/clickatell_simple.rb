@@ -40,8 +40,8 @@ class ClickatellSimple
     self.password = password
   end
   
-  def sms(contents, destination, from)
-    response = dispatch(:sendmsg, :to => destination, :text => contents, :from => from)
+  def sms(contents, destination, from, max)
+    response = dispatch(:sendmsg, :to => destination, :text => contents, :from => from, :concat => max)
     check_error(response)
     if response.to_s =~ /^ID: (.*)$/
       return $1

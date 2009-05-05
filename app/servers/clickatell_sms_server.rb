@@ -24,9 +24,8 @@ module Lokii
       validate_number(number)
       number.gsub!(/^\+/, '')
       msg = encode(text, 'ascii')
-      msg = msg[0..160]
       c = ClickatellSimple.new('3166189', Lokii::Config.clickatell_user, Lokii::Config.clickatell_password)
-      c.sms(msg, number, '56994110587')      
+      c.sms(msg, number, '56994110587', 5)      
     rescue InvalidPhoneNumberError => e
       Lokii::Logger.debug "Could not send message because the number is not valid #{e.message}"  
     rescue Exception => e
