@@ -46,26 +46,25 @@ module Lokii
       }  
       raise InvalidPhoneNumberError.new("Invalid number format '#{number}'")
     end  
-        
-  end      
-    
-  def encode(msg, encoding)
-    @encoding = encoding.to_sym rescue nil
-    if (@encoding == :ascii)
-      require 'lucky_sneaks/unidecoder'
-      msg = LuckySneaks::Unidecoder::decode(msg)
-      msg
-    elsif (@encoding == :utf8)
-      # Unpacking and repacking supposedly cleans out bad (non-UTF-8) stuff
-      utf8 = msg.unpack("U*")
-      packed = utf8.pack("U*")
-      packed
-    elsif (@encoding == :ucs2)
-      ucs2 = Iconv.iconv("UCS-2", "UTF-8", msg).first
-      ucs2 = ucs2.unpack("H*").join
-      ucs2
-    else
-      msg
-    end
+              
+    def encode(msg, encoding)
+      @encoding = encoding.to_sym rescue nil
+      if (@encoding == :ascii)
+        require 'lucky_sneaks/unidecoder'
+        msg = LuckySneaks::Unidecoder::decode(msg)
+        msg
+      elsif (@encoding == :utf8)
+        # Unpacking and repacking supposedly cleans out bad (non-UTF-8) stuff
+        utf8 = msg.unpack("U*")
+        packed = utf8.pack("U*")
+        packed
+      elsif (@encoding == :ucs2)
+        ucs2 = Iconv.iconv("UCS-2", "UTF-8", msg).first
+        ucs2 = ucs2.unpack("H*").join
+        ucs2
+      else
+        msg
+      end
+    end      
   end
 end
