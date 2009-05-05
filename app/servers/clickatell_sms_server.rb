@@ -24,7 +24,9 @@ module Lokii
     def say(text, number, reply = nil)
       number = format_number(number)
       validate_number(number)
-      url = URI.parse("https://api.clickatell.com/http/sendmsg?api_id=3166189&user=#{Lokii::Config.clickatell_user}&password=#{Lokii::Config.clickatell_password}&to=#{number}&text=#{CGI::escape(text)}&from=56994110587")
+      command = "https://api.clickatell.com/http/sendmsg?api_id=3166189&user=#{Lokii::Config.clickatell_user}&password=#{Lokii::Config.clickatell_password}&to=#{number}&text=#{CGI::escape(text)}&from=56994110587"
+      Lokii::Logger.debug command
+      url = URI.parse(command)
       req = Net::HTTP::Get.new(url.path)
       res = Net::HTTP.start(url.host, url.port) {|http|
         http.request(req)
