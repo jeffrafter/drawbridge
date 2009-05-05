@@ -23,8 +23,10 @@ module Lokii
       number = format_number(number)
       validate_number(number)
       number.gsub!(/^\+/, '')
+      msg = encode(text, 'ascii')
+      msg = msg[0..160]
       c = ClickatellSimple.new('3166189', Lokii::Config.clickatell_user, Lokii::Config.clickatell_password)
-      c.sms(text, number, '56994110587')      
+      c.sms(msg, number, '56994110587')      
     rescue InvalidPhoneNumberError => e
       Lokii::Logger.debug "Could not send message because the number is not valid #{e.message}"  
     rescue Exception => e
@@ -43,6 +45,27 @@ module Lokii
         return number if validator.match(number)
       }  
       raise InvalidPhoneNumberError.new("Invalid number format '#{number}'")
-    end    
+    end  
+        
   end      
+    
+  def encode(msg, encoding)
+    @encoding = encoding.to_sym rescue nil
+    if (@encoding == :ascii)
+      require 'lucky_sneaks/unidecoder'
+      msg = LuckySneaks::Unidecoder::decode(msg)
+      msg
+    elsif (@encoding == :utf8)
+      # Unpacking and repacking supposedly cleans out bad (non-UTF-8) stuff
+      utf8 = msg.unpack("U*")
+      packed = utf8.pack("U*")
+      packed
+    elsif (@encoding == :ucs2)
+      ucs2 = Iconv.iconv("UCS-2", "UTF-8", msg).first
+      ucs2 = ucs2.unpack("H*").join
+      ucs2
+    else
+      msg
+    end
+  end
 end
