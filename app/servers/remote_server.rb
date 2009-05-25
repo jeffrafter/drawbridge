@@ -47,7 +47,7 @@ private
   # Save this message to the local store for queueing 
   def save(message)
     filename = Lokii::Config.store + ("%02d" % message.priority.to_i) + '_' + Time.now.iso8601 + '.yml'
-    filename = File.expand_path(filename)
+    filename = File.expand_path(filename).gsub(/\\/, '/')
     File.open(filename, 'w') {|out| out.write message.to_yaml }
   end
   
@@ -56,7 +56,7 @@ private
     files = Dir[Lokii::Config.store.gsub(/\\/, '/') + "*"]
     filename = files.first
     return unless filename
-    filename = File.expand_path(filename)
+    filename = File.expand_path(filename).gsub(/\\/, '/')
     message = YAML.load_file(filename)
     return unless message
     say message.text, message.number     
