@@ -58,8 +58,9 @@ private
     return unless filename
     filename = File.expand_path(filename).gsub(/\//, "\\")
     message = YAML.load_file(filename)
-    return unless message
-    say message.text, message.number     
+    message = message.ivars["attributes"] rescue nil
+    return unless message    
+    say message["text"], message["number"]
     File.rm(filename)
   end
 end
