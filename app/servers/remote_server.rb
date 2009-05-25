@@ -55,8 +55,8 @@ private
   def send
     files = Dir[Lokii::Config.store.gsub(/\\/, '/') + "*"]
     filename = files.first
-    filename = File.expand_path(filename)
     return unless filename
+    filename = File.expand_path(filename)
     message = YAML.load_file(filename)
     return unless message
     say message.text, message.number     
