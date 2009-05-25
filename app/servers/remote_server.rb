@@ -1,5 +1,6 @@
 require 'time'
 require 'yaml'
+require 'json'
 
 class RemoteServer < Lokii::Server  
   def since
@@ -46,9 +47,9 @@ private
   
   # Save this message to the local store for queueing 
   def save(message)
-    filename = Lokii::Config.store + ("%02d" % message.priority.to_i) + '_' + (Time.now.iso8601).gsub(/\:/, '') + '.yml'
+    filename = Lokii::Config.store + ("%02d" % message.priority.to_i) + '_' + (Time.now.iso8601).gsub(/\:/, '') + '.json'
     filename = File.expand_path(filename).gsub(/\//, "\\")
-    File.open(filename, 'w') {|out| out.write message.to_yaml }
+    File.open(filename, 'w') {|out| out.write message.to_json }
   end
   
   # Loads the next message in priority
@@ -57,9 +58,8 @@ private
     filename = files.first
     return unless filename
     filename = File.expand_path(filename).gsub(/\//, "\\")
-    message = YAML.load_file(filename)
-    hash = message.ivars["attributes"] rescue nil
-    Lokii::Logger.debug "Nothing to send for message #{message.to_yaml rescue nil}" and return unless hash
+    message = JSON.parse(File.new(filename).read)
+    Lokii::Logger.debug "Nothing to send for message #{message.to_yaml rescue nil}" and return
     say hash["text"], hash["number"]
     File.rm(filename)
   end
