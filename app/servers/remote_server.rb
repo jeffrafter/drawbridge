@@ -58,8 +58,7 @@ private
     return unless filename
     filename = File.expand_path(filename).gsub(/\//, "\\")
     message = YAML.load_file(filename)
-    Lokii::Logger.debug "Nothing to send for message #{filename}" and return unless message
     say message["text"], message["number"]
-    File.rm(filename)
+    File.delete(filename)
   end
 end
