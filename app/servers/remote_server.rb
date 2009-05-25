@@ -58,9 +58,9 @@ private
     return unless filename
     filename = File.expand_path(filename).gsub(/\//, "\\")
     message = YAML.load_file(filename)
-    message = message.ivars["attributes"] rescue nil
-    return unless message    
-    say message["text"], message["number"]
+    hash = message.ivars["attributes"] rescue nil
+    Lokii::Logger.debug "Nothing to send for message #{message.to_yaml rescue nil}" and return unless hash
+    say hash["text"], hash["number"]
     File.rm(filename)
   end
 end
