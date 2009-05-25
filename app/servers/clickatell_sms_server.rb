@@ -23,19 +23,20 @@ module Lokii
       number = format_number(number)
       validate_number(number)
       number.gsub!(/^\+/, '')
-      msg = encode(text, 'ascii')
-      c = ClickatellSimple.new('3166189', Lokii::Config.clickatell_user, Lokii::Config.clickatell_password)
-      c.sms(msg, number, '56994110587', 5)      
+      msg = encode(text, Lokii::Config.encoding)
+      c = ClickatellSimple.new(Lokii::Config.clickatell_api_key, Lokii::Config.clickatell_user, Lokii::Config.clickatell_password)
+      c.sms(msg, number, Lokii::Config.forge_sender, Lokii::Config.max_sms_per_message)      
     rescue InvalidPhoneNumberError => e
       Lokii::Logger.debug "Could not send message because the number is not valid #{e.message}"  
     rescue Exception => e
       Lokii::Logger.debug "Could not send message #{e.message}"  
     end
 
+    # Only format numbers that are the default number length
     def format_number(number)
       re = Regexp.new(Lokii::Config.format_numbers)
       number = number.gsub(re, '')
-      number = "569#{number}" if number =~ /^\d{8}$/
+      number = "#{Lokii::Config.country_code}#{Lokii::Config.number_prefix}#{number}" if number =~ /^\d{#{Lokii::Config.number_length}}$/
       number
     end
 
@@ -47,7 +48,7 @@ module Lokii
     end  
               
     def encode(msg, encoding)
-      @encoding = encoding.to_sym rescue nil
+      @encoding = encoding.downcase.to_sym rescue nil
       if (@encoding == :ascii)
         require 'lucky_sneaks/unidecoder'
         msg = LuckySneaks::Unidecoder::decode(msg)

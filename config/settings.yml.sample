@@ -5,10 +5,22 @@ development:
   interval: 5
   verbose: false
   ports: COM3
-  encoding: UTF8
+  encoding: ASCII
   ignore_unknown_errors: n
   remote: 'http://datadyne.socialrange.org'
   api_key: 017d3538f06235763edb33c494e57016ff93aafaa1db7a9c5c4f0764dd2ac576508d6fed073319af6a0355009a601909af854ad7b60f3b7eb43fcb32ac84f47c
   log: log\development.log
   err: log\development.err
   pid: tmp\pids\lokii.pid
+  store: tmp\store\
+  clickatell_api_key: somekey
+  clickatell_user: someuser
+  clickatell_password: somepassword
+  format_numbers: '[^0-9\+]'
+  valid_numbers: ['^\+569\d{8}$', '^\+1\d{10}$']
+  number_length: 8
+  number_prefix: '9'
+  number_country_code: '56'
+  forge_sender: '56994110587'
+  max_sms_per_message: 5 
+  
