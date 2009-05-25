@@ -21,7 +21,7 @@ class RemoteServer < Lokii::Server
     end
     send
   rescue Exception => e
-    Lokii::Logger.debug 'Error trying to retrieve and send message: ' + e.message  
+    Lokii::Logger.debug 'Error trying to retrieve and send message: ' + e.message + "\n" + e.backtrace.join("\n  ")
   end
 
   def say(text, number, reply = nil)
