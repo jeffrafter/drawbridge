@@ -19,8 +19,7 @@ class RemoteServer < Lokii::Server
       save message
       self.since = message.updated_at.utc if message.updated_at.utc > self.since
     end
-    message = load
-    say message.text, message.number if message
+    send
   rescue Exception => e
     Lokii::Logger.debug 'Error trying to retrieve and send message: ' + e.message  
   end
@@ -47,15 +46,20 @@ private
   
   # Save this message to the local store for queueing 
   def save(message)
-    filename = Lokii::Config.store + ("%02d" % message.priority.to_i) + Time.now.iso8601 + '.yml'
+    filename = Lokii::Config.store + ("%02d" % message.priority.to_i) + '_' + Time.now.iso8601 + '.yml'
+    filename = File.expand_path(filename)
     File.open(filename, 'w') {|out| out.write message.to_yaml }
   end
   
   # Loads the next message in priority
-  def load
+  def send
     files = Dir[Lokii::Config.store.gsub(/\\/, '/') + "*"]
     filename = files.first
-    return nil unless filename
-    YAML.load_file(filename)
+    filename = File.expand_path(filename)
+    return unless filename
+    message = YAML.load_file(filename)
+    return unless message
+    say message.text, message.number     
+    File.rm(filename)
   end
 end
