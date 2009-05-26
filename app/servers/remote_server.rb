@@ -14,6 +14,7 @@ class RemoteServer < Lokii::Server
   end
   
   def check
+    Lokii::Logger.print "."    
     messages = Outbox.all(:since => self.since.iso8601)
     messages.each do |message|
       save message
@@ -21,7 +22,7 @@ class RemoteServer < Lokii::Server
     end
     send
   rescue Exception => e
-    Lokii::Logger.debug 'Error trying to retrieve and send message: ' + e.message + "\n" + e.backtrace.join("\n  ")
+    Lokii::Logger.debug "\n" + 'Error trying to retrieve and send message: ' + e.message + "\n" + e.backtrace.join("\n  ")
   end
 
   def say(text, number, reply = nil)
