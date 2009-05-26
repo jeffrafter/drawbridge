@@ -46,8 +46,9 @@ private
   end
   
   # Save this message to the local store for queueing 
-  def save(message)
-    filename = Lokii::Config.store + ("%02d" % message.priority.to_i) + '_' + (Time.now.iso8601).gsub(/\:/, '') + '.yml'
+  def save(message)    
+    filename = Lokii::Config.store + ("%02d" % message.priority.to_i) + '_' + (message.updated_at.iso8601).gsub(/\:/, '') + '.yml'
+    Lokii::Logger.debug "Storing message: #{filename}"
     filename = File.expand_path(filename).gsub(/\//, "\\")
     File.open(filename, 'w') {|out| out.write message.attributes.to_yaml }
   end
