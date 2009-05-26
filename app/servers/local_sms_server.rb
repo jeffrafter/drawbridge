@@ -48,7 +48,8 @@ module Lokii
       validate_number(number)
       @current += 1
       @current = 0 if @current > @proxies.size - 1 
-      @proxies[@current].sms(number, text)
+      @proxies[@current].sms(number.gsub(/\+/, ''), text)
+      Lokii::Logger.debug "Message sent"
     rescue InvalidPhoneNumberError => e
       Lokii::Logger.debug "Could not send message because the number is not valid #{e.message}"  
     rescue Exception => e
