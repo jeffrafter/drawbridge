@@ -7,8 +7,10 @@ class RemoteHandler < Lokii::Handler
       :text => message[:text], 
       :sent_at => message[:created_at],
       :processed_at => message[:processed_at] )
+    Lokii::Logger.debug ""
   rescue Exception => e
     # For now we are not going to do anything special with errors, maybe we will          
     Lokii::Logger.debug 'Error sending to remote server: ' + e.message  
+    Lokii::Logger.debug ""
   end
 end

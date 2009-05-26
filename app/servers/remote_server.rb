@@ -14,7 +14,7 @@ class RemoteServer < Lokii::Server
   end
   
   def check
-    Lokii::Logger.print "."    
+    Lokii::Logger.debug "[#{Time.now.iso8601}] Waiting"    
     messages = Outbox.all(:since => self.since.iso8601)
     messages.each do |message|
       save message
