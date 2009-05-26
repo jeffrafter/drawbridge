@@ -43,6 +43,12 @@ module Lokii
     end
 
     def say(text, number, reply = nil)
+      return unless Lokii::Config.send_using.downcase.to_sym == :local
+      number = format_number(number)
+      validate_number(number)
+      @current += 1
+      @current = 0 if @current > @proxies.size - 1 
+      @proxies[@current].sms(number, text)
     rescue InvalidPhoneNumberError => e
       Lokii::Logger.debug "Could not send message because the number is not valid #{e.message}"  
     rescue Exception => e

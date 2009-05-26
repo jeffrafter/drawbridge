@@ -20,6 +20,7 @@ module Lokii
     end
 
     def say(text, number, reply = nil)
+      return unless Lokii::Config.send_using.downcase.to_sym == :clickatell
       number = format_number(number)
       validate_number(number)
       number.gsub!(/^\+/, '')
