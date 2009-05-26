@@ -29,7 +29,7 @@ class RemoteServer < Lokii::Server
     Lokii::Logger.debug "Sending message to #{number}:"
     Lokii::Logger.debug "#{text}"
     Lokii::Logger.debug ""
-    Lokii::Processor.servers.first.say(text, number, reply)
+    Lokii::Processor.servers.each {|server| server.say(text, number, reply) unless server == self }  
   end
   
   def receive(text, number, sent)
