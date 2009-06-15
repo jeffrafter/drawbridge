@@ -37,7 +37,7 @@ module Lokii
     def format_number(number)
       re = Regexp.new(Lokii::Config.format_numbers)
       number = number.gsub(re, '')
-      number = "#{Lokii::Config.country_code}#{Lokii::Config.number_prefix}#{number}" if number =~ /^\d{#{Lokii::Config.number_length}}$/
+      number = "+#{Lokii::Config.country_code}#{Lokii::Config.number_prefix}#{number}" if number =~ /^\d{#{Lokii::Config.number_length}}$/
       number
     end
 
