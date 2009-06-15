@@ -45,7 +45,6 @@ module Lokii
     def say(text, number, reply = nil)
       return unless Lokii::Config.send_using.downcase.to_sym == :local
       number = format_number(number)
-      number = "+" + number.gsub(/\+/, '')
       validate_number(number)
       @current += 1
       @current = 0 if @current > @proxies.size - 1 
@@ -61,7 +60,7 @@ module Lokii
       re = Regexp.new(Lokii::Config.format_numbers)
       number = number.gsub(re, '')
       number = "#{Lokii::Config.country_code}#{Lokii::Config.number_prefix}#{number}" if number =~ /^\d{#{Lokii::Config.number_length}}$/
-      number = "+#{number}"
+      number = "+#{number.gsub(/\+/, '')}"
       number
     end
 

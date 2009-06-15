@@ -23,7 +23,6 @@ module Lokii
       return unless Lokii::Config.send_using.downcase.to_sym == :clickatell
       number = format_number(number)
       validate_number(number)
-      number.gsub!(/^\+/, '')
       msg = encode(text, Lokii::Config.encoding)
       c = ClickatellSimple.new(Lokii::Config.clickatell_api_key, Lokii::Config.clickatell_user, Lokii::Config.clickatell_password)
       c.sms(msg, number, Lokii::Config.forge_sender, Lokii::Config.max_sms_per_message)      
@@ -37,7 +36,8 @@ module Lokii
     def format_number(number)
       re = Regexp.new(Lokii::Config.format_numbers)
       number = number.gsub(re, '')
-      number = "+#{Lokii::Config.country_code}#{Lokii::Config.number_prefix}#{number}" if number =~ /^\d{#{Lokii::Config.number_length}}$/
+      number = "#{Lokii::Config.country_code}#{Lokii::Config.number_prefix}#{number}" if number =~ /^\d{#{Lokii::Config.number_length}}$/
+      number = "+#{number.gsub(/\+/, '')}"
       number
     end
 
