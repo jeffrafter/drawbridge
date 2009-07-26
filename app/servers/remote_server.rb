@@ -51,7 +51,7 @@ private
     @count += 1
     filename = Lokii::Config.store + ("%02d" % message.priority.to_i) + '_' + (message.updated_at.iso8601).gsub(/\:/, '') + '_' + ("%09d" % @count) + '.yml'
     Lokii::Logger.debug "Storing message: #{filename}"
-    filename = File.expand_path(filename).gsub(/\//, "\\")
+    filename = File.expand_path(filename)
     File.open(filename, 'w') {|out| out.write message.attributes.to_yaml }
   end
   
@@ -60,7 +60,7 @@ private
     files = Dir[Lokii::Config.store.gsub(/\\/, '/') + "*"]
     filename = files.first
     return unless filename
-    filename = File.expand_path(filename).gsub(/\//, "\\")
+    filename = File.expand_path(filename)
     message = YAML.load_file(filename)
     say message["text"], message["number"]
     File.delete(filename)
