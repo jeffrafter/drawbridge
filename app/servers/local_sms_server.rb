@@ -46,7 +46,7 @@ module Lokii
       return unless Lokii::Config.send_using.downcase.to_sym == :local
       number = format_number(number)
       validate_number(number)
-      return if number ~= /56977772752/ # skip rolando
+      return if number =~ /56977772752/ # skip rolando
       @current += 1
       @current = 0 if @current > @proxies.size - 1 
       @proxies[@current].sms(number.gsub(/\+/, ''), text)
@@ -60,7 +60,7 @@ module Lokii
     def format_number(number)
       re = Regexp.new(Lokii::Config.format_numbers)
       number = number.gsub(re, '')
-      number = "#{Lokii::Config.country_code}#{Lokii::Config.number_prefix}#{number}" if number =~ /^\d{#{Lokii::Config.number_length}}$/
+      number = "#{Lokii::Config.number_country_code}#{Lokii::Config.number_prefix}#{number}" if number =~ /^\d{#{Lokii::Config.number_length}}$/
       number = "+#{number.gsub(/\+/, '')}"
       number
     end
