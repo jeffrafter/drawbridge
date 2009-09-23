@@ -46,7 +46,6 @@ module Lokii
       return unless Lokii::Config.send_using.downcase.to_sym == :local
       number = format_number(number)
       validate_number(number)
-      return if number =~ /56977772752/ # skip rolando
       @current += 1
       @current = 0 if @current > @proxies.size - 1 
       @proxies[@current].sms(number.gsub(/\+/, ''), text)
