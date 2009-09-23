@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+require 'rubygems'
 require 'daemons'
 
 LOKII_DAEMON = true
@@ -26,8 +27,8 @@ options = {
   :dir => File.join(LOKII_ROOT, 'tmp', 'pids').gsub(File::SEPARATOR, File::ALT_SEPARATOR || File::SEPARATOR),
   :backtrace => true,
   :log_output => true,
-  :app_name => 'lokii'
+  :app_name => 'lokii',
+  :monitor => true
 }
-#:monitor => true
 
 Daemons.run(File.join(LOKII_ROOT, 'config', 'process.rb'), options)
