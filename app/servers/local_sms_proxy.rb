@@ -12,12 +12,20 @@ module Lokii
     end
 
     def sms(number, text)
-      @modem.sms(number, text)
+      begin
+        @modem.sms(number, text)
+      rescue Exception => e
+        Lokii::Logger.warn "ERROR when sending sms: #{e.message} (#{err.class})"
+      end
     end
     
     def messages
-      @modem.process
-      @modem.messages || []
+      begin
+        @modem.process
+        @modem.messages || []
+      rescue Exception => e
+        Lokii::Logger.warn "ERROR when fetching messages: #{e.message} (#{err.class})"
+      end
     end
   end  
 end
