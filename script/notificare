@@ -1,0 +1,77 @@
+#!/usr/bin/env ruby
+require 'rubygems'
+require 'net/http'
+require 'uri'
+require 'json'
+
+# Sleeping
+exit(1) if Time.now.hour < 8 || Time.now.hour > 20
+
+# Example settings
+#
+#  default:
+#    username: some_twitter_username
+#    password: some_clever_password
+#    recipients: matt, max, molly1270
+
+NOTIFICARE_BASE = File.expand_path(File.join(File.dirname(__FILE__), '..'))
+NOTIFICARE_ENV = ENV["NOTIFICARE_ENV"] || "default"
+NOTIFICARE_SETTINGS = YAML.load_file(File.join(NOTIFICARE_BASE, "config", "settings.yml"))[NOTIFICARE_ENV] rescue nil
+NOTIFICARE_DELAY = 3600
+
+class String; def compact; self.gsub(/^\s*|\s*$/, '').gsub(/\s+/, ' '); end; end
+
+# Log something, in a yelling manner 
+def yell(message) 
+  # stupid simple logging:
+  log = File.join(NOTIFICARE_BASE, "log")
+  `mkdir -p #{log}`
+  f = File.open(log + "/notificare.log","a") 
+  f.puts "[#{Time.now.strftime('%Y-%m-%d %H:%M:%S')}] #{message}"
+  f.close
+end
+
+# Send a twitter direct message, note that you can only send direct messages
+# to a recipient if they are following the user specified in username
+def dm(message)
+  raise "Could not send message because of invalid options #{options}" unless NOTIFICARE_SETTINGS
+  recipients = NOTIFICARE_SETTINGS["recipients"].split(/\s*,\s*/)
+  username = NOTIFICARE_SETTINGS["username"]
+  password = NOTIFICARE_SETTINGS["password"]
+  recipients.each do |recipient|
+    uri = "http://#{username}:#{password}@twitter.com/direct_messages/new.json"
+    yell "Sending #{recipient}: #{message}"
+    Net::HTTP.post_form(URI.parse(uri), {'user' => recipient, 'text' => message})
+  end  
+end
+
+def running?(process)
+  `if killall -0 #{process}; then echo 'running'; fi`.compact == 'running'
+end
+
+def lock(action)
+  file = File.join(NOTIFICARE_BASE, "tmp", "#{action}.lock")
+  File.open(file, 'w') { |f| f.puts Time.now.to_yaml }
+end
+
+def unlock(action)
+  File.rm(File.join(NOTIFICARE_BASE, "tmp", "#{action}.lock")) rescue nil
+end
+
+def locked?(action)
+  file = File.join(NOTIFICARE_BASE, "tmp", "#{action}.lock")
+  last = YAML::load(File.open(file))
+  Time.now < (last + NOTIFICARE_DELAY)
+rescue
+  false  
+end
+
+# We want to watch to make sure there is a lokii process
+process = 'lokii';
+
+# If it is running or if we sent a message in the past hour then do nothing
+unless running?(process) || locked?(process)
+  lock process
+  dm "#{process} is not running"
+end
+
