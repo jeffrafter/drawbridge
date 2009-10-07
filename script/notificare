@@ -46,7 +46,7 @@ def dm(message)
 end
 
 def running?(process)
-  `if killall -0 #{process}; then echo 'running'; fi`.compact == 'running'
+  `pidof #{process}`.to_i > 0
 end
 
 def lock(action)
