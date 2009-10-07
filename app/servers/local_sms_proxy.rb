@@ -15,7 +15,7 @@ module Lokii
       begin
         @modem.sms(number, text)
       rescue Exception => e
-        Lokii::Logger.warn "ERROR when sending sms: #{e.message} (#{err.class})"
+        Lokii::Logger.warn "ERROR when sending sms: #{e.message} (#{e.class})"
       end
     end
     
@@ -24,7 +24,7 @@ module Lokii
         @modem.process
         @modem.messages || []
       rescue Exception => e
-        Lokii::Logger.warn "ERROR when fetching messages: #{e.message} (#{err.class})"
+        Lokii::Logger.warn "ERROR when fetching messages: #{e.message} (#{e.class})"
       end
     end
   end  
