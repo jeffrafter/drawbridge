@@ -72,6 +72,6 @@ process = 'lokii';
 # If it is running or if we sent a message in the past hour then do nothing
 unless running?(process) || locked?(process)
   lock process
-  dm "#{process} is not running"
+  dm "#{process} is not running (#{Time.now})"
 end
 
