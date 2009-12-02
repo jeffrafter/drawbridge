@@ -25,6 +25,7 @@ module Lokii
         @modem.messages || []
       rescue Exception => e
         Lokii::Logger.warn "ERROR when fetching messages: #{e.message} (#{e.class})"
+	[]
       end
     end
   end  
